@@ -11,7 +11,7 @@ import os
 import datetime as dt
 
 # Incorporate data
-df = pd.read_csv('cleaned_data.csv', encoding='ISO-8859-1')
+df = pd.read_csv('../data/cleaned_data.csv', encoding='ISO-8859-1')
 
 
 
