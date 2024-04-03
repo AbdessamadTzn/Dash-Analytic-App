@@ -69,7 +69,7 @@ app.layout = html.Div([
         html.Div(children=html.H1('Analytic App - Flight Crashes', style={'textAlign':'center'})),
         html.Div([
             html.H4("This analytic app is under development", style={'textAlign': 'center', 'color':'red'}),  
-            html.A("Source Code Github && Analysis Process", href="https://github.com/AbdessamadTzn/Self-Taught-Data-Scientist/tree/main/Analyzing%20Flight%20Crashes",
+            html.A("Source Code Github && Analysis Process", href="https://github.com/AbdessamadTzn/Dash-Analytic-App",
                 target="_blank",
             ),
             contact_me,
@@ -95,11 +95,11 @@ app.layout = html.Div([
     html.Div([
         # 2.1 graph
         html.Div([
-        html.H2('Select a Route', style={'text-align': 'center'}),
+        html.H2('Select a Route'),
+        html.H4('Bugs with some routes...fixing...', style={'text-color':'red'}),
         dcc.Dropdown(id='route',value='Test flight', options=[{'label': route, 'value': route} for route in unique_routes ]),
         dcc.Graph(id='plot2')
         ]
-        #style={'width': '49%', 'float': 'right', 'display': 'inline-block', 'textAlign':'center'}
         )
         # 2.2 graph
     ])
