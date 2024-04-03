@@ -7,6 +7,7 @@ from dash import dcc, html, Input, Output
 import plotly.graph_objects as go
 import dash_ag_grid as dag
 '''
+import os
 import datetime as dt
 
 # Incorporate data
@@ -15,7 +16,8 @@ df = pd.read_csv('Data/cleaned_data.csv', encoding='ISO-8859-1')
 
 
 # Intialize app
-app = dash.Dash(__name__, assets_folder='assets', title='Flight Crashes')
+app = dash.Dash(__name__, title='Flight Crashes')
+server = app.server
 
 # Layout Section of Dash
 
@@ -158,4 +160,4 @@ def routes_crashes(input_route):
 
 
 if __name__ == '__main__':
-    app.run_server()
+    app.run_server(debug=True)
