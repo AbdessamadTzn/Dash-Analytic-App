@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 import dash
 from dash import dcc, html, Input, Output
+import plotly.graph_objects as go
 '''
 import plotly.graph_objects as go
 import dash_ag_grid as dag
@@ -11,8 +12,9 @@ import os
 import datetime as dt
 
 # Incorporate data
-df = pd.read_csv('../data/cleaned_data.csv', encoding='ISO-8859-1')
+df = pd.read_csv('../data/cleaned_airplane_crashes_since_1908.csv', encoding='ISO-8859-1')
 
+df['Year'] = pd.to_datetime(df['Date']).dt.year
 
 
 # Intialize app
@@ -46,14 +48,6 @@ fig2 = px.scatter_geo(Frequent_5_locations,
                         hover_name='Location', 
                         #animation_frame="Year",
                         projection="natural earth")
-''' 
-TODO
-Pie chart, shows for every year, total numbers of ftalities,
-fatalitites passengers, 
-fatalities crew,
-ground..
-depends on user pereference
-'''
 
 unique_routes = df['Route'].unique()
 contact_me = html.Div([
@@ -73,9 +67,10 @@ app.layout = html.Div([
                 target="_blank",
             ),
             contact_me,
+            html.Br(),
+            html.A('View Report', href='https://abdessamadtouzani-portfolio.netlify.app/assets/data_exploration.html', target='_blank'),
         ], style={'marginTop': 10, 'textAlign':'center'}),  
     ]),
-
     # Second division for the dropdown && 2 graphs
     html.Div([
         # 1.1 graph
@@ -92,20 +87,16 @@ app.layout = html.Div([
         ], style={'width': '49%', 'float': 'right', 'display': 'inline-block', 'textAlign':'center'})
     ]),
     # Third Division
-    html.Div([
-        # 2.1 graph
-        html.Div([
-        html.H2('Select a Route'),
-        html.H4('Bugs with some routes...fixing...', style={'text-color':'red'}),
-        dcc.Dropdown(id='route',value='Test flight', options=[{'label': route, 'value': route} for route in unique_routes ]),
-        dcc.Graph(id='plot2')
-        ]
-        )
         # 2.2 graph
+    # html.Div([
+    #     dcc.Graph(
+    #         id='crossfilter-indicator-scatter',
+    #         hoverData={'points': [{'customdata': 'Japan'}]}
+    #     )
+    # ], style={'width': '49%', 'display': 'inline-block', 'padding': '0 20'}),
+
+
     ])
-
-])
-
 # Layout ends
 
 # Controls for building the interactions
@@ -136,28 +127,41 @@ def pie_year(input_year):
         return fig
 
 # Second Division
-@app.callback(
-    Output(component_id='plot2', component_property='figure'),
-    Input(component_id='route', component_property='value')
-)
-def routes_crashes(input_route):
-    if input_route is None:
-        return {}
+# Convert 'Date' column to datetime format
+df['Date'] = pd.to_datetime(df['Date'])
+
+# Extract year from 'Date' column
+df['Year'] = df['Date'].dt.year
+
+# Group by year and count the number of crashes
+# @app.callback(
+#     Output(component_id='plot2', component_property='figure'),
+#     Input(component_id='route', component_property='value')
+# )
+# def routes_crashes(input_route):
+#     if input_route is None:
+#         return {}
     
-    # Filter the DataFrame based on the selected route
-    filtered_df = df[df['Route'] == input_route]
+#     # Filter the DataFrame based on the selected route
+#     filtered_df = df[df['Route'] == input_route]
     
-    # Group by year and count the number of crashes
-    yearly_crashes_counts = filtered_df.groupby(filtered_df['Year']).size()    
-    # Create the plot
-    fig = px.line(x=yearly_crashes_counts.index, y=yearly_crashes_counts,
-                  title=f'Distribution of Flight Crashes Over the Years for Route {input_route}',
-                  labels=[{'x' : 'Years', 'y':'Crashes'}])
-    fig.update_xaxes(title_text='Year')
-    fig.update_yaxes(title_text='Number of Crashes')
+#     # Group by year and count the number of crashes
+#     yearly_crashes_counts = filtered_df.groupby('Year').size()
     
-    return fig
+#     # Create the plot
+#     fig = px.line(x=yearly_crashes_counts.index, y=yearly_crashes_counts,
+#                   title=f'Distribution of Flight Crashes Over the Years for Route {input_route}',
+#                   labels={'x': 'Years', 'y':'Crashes'})
+#     fig.update_xaxes(title_text='Year')
+#     fig.update_yaxes(title_text='Number of Crashes')
+    
+#     return fig
+
 
 
 if __name__ == '__main__':
     app.run_server(debug=True)
+
+
+
+
