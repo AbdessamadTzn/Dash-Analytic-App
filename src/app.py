@@ -10,11 +10,15 @@ import dash_ag_grid as dag
 '''
 import os
 import datetime as dt
+import dash_bootstrap_components as dbc
+from plotly import data
 
 # Incorporate data
+
 df = pd.read_csv('../data/cleaned_airplane_crashes_since_1908.csv', encoding='ISO-8859-1')
 
 df['Year'] = pd.to_datetime(df['Date']).dt.year
+
 
 
 # Intialize app
@@ -50,6 +54,12 @@ fig2 = px.scatter_geo(Frequent_5_locations,
                         projection="natural earth")
 
 unique_routes = df['Route'].unique()
+
+
+
+
+
+#Contact
 contact_me = html.Div([
             "by  ",
            html.A("Abdessamad Touzani", href="https://www.linkedin.com/in/abdessamadtouzani",
@@ -58,6 +68,7 @@ contact_me = html.Div([
 ],style={"display": "inline-block", "margin-left": "10px"})
 
 app.layout = html.Div([
+
     # First division for the title and info
     html.Div([
         html.Div(children=html.H1('Analytic App - Flight Crashes', style={'textAlign':'center'})),
@@ -71,13 +82,16 @@ app.layout = html.Div([
             html.A('View Report', href='https://abdessamadtouzani-portfolio.netlify.app/assets/data_exploration.html', target='_blank'),
         ], style={'marginTop': 10, 'textAlign':'center'}),  
     ]),
+
     # Second division for the dropdown && 2 graphs
     html.Div([
         # 1.1 graph
         html.Div([
             html.H2('Select Year', style={'margin-right': '2rem'}),
             dcc.Dropdown(options=[{'label': year, 'value': year} for year in df['Year'].unique()], value=2002, id='year'),
+            dcc.Loading([
             dcc.Graph(id='plot1')
+            ])
         ], style={'width': '49%', 'float': 'left', 'display': 'inline-block'}),
         
         # 1.2 graph
@@ -86,13 +100,13 @@ app.layout = html.Div([
             dcc.Graph(figure=fig2)
         ], style={'width': '49%', 'float': 'right', 'display': 'inline-block', 'textAlign':'center'})
     ]),
+
     # Third Division
         # 2.2 graph
     # html.Div([
-    #     dcc.Graph(
-    #         id='crossfilter-indicator-scatter',
-    #         hoverData={'points': [{'customdata': 'Japan'}]}
-    #     )
+
+
+    #     dcc.Graph(figure=figPlot),
     # ], style={'width': '49%', 'display': 'inline-block', 'padding': '0 20'}),
 
 
